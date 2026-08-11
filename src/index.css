@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+
+  /* Deep teal + vivid green + mint. `navy`/`cream`/`stone*`/`ink` are the
+     THEME-SWAPPABLE chrome tokens (redefined under html.dark below).
+     `panel`/`on-panel` are FIXED — for sections deliberately dark in both
+     themes (hero, footer, quote, mobile menu, preloader). Never swap those. */
+  --color-ink: #0d211f;
+  --color-navy: #0e2b2b;
+  --color-navy-light: #1c4442;
+  --color-stone: #e2f2e7;
+  --color-stone-light: #f2f9f4;
+  --color-stone-dark: #cfe8d8;
+  --color-gold: #22c55e;
+  --color-gold-light: #4ade80;
+  --color-cream: #ffffff;
+
+  --color-panel: #0e2b2b;
+  --color-panel-light: #1c4442;
+  --color-on-panel: #ffffff;
+
+  --animate-shimmer: shimmer 1.8s ease-in-out infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-spin-slow: spin 12s linear infinite;
+  --animate-spin-slower: spin 24s linear infinite;
+}
+
+/* Dark mode: only the swappable chrome tokens change. Panel tokens above
+   stay fixed so hero/footer/quote/etc. stay dark in both themes. */
+html.dark {
+  --color-ink: #eaf3ee;
+  --color-navy: #eaf3ee;
+  --color-navy-light: #c3ddd2;
+  --color-stone: #14231f;
+  --color-stone-light: #101c1a;
+  --color-stone-dark: #24352f;
+  --color-cream: #0a1615;
+}
+
+html.dark ::selection {
+  background: var(--color-gold);
+  color: var(--color-panel);
+}
+
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+::selection {
+  background: var(--color-navy);
+  color: var(--color-stone);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-stone-dark);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold);
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-stone) 0%,
+    var(--color-stone-light) 50%,
+    var(--color-stone) 100%
+  );
+  background-size: 800px 100%;
+  animation: var(--animate-shimmer);
+}
+
+/* Hard fallback: anything not gated in JS still respects reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
