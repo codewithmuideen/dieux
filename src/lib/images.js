@@ -1,11 +1,11 @@
 // Local assets supplied in /public (served from site root).
 export const IMAGES = {
-  heroVideo: "/bg.mp4",
   heroPoster: "/advisory1.jpg",
   aboutStory: "/growth4.jpg",
   whyUsTeam: "/acoount.jpg",
   whyUsHandshake: "/advisory2.jpg",
   advisoryApproach: "/growth.jpg",
+  teamCulture: "/dash.jpg",
 };
 
 // Pixabay (royalty-free, no attribution required), verified working CDN URLs.

@@ -7,14 +7,27 @@ import SubmitButton from "../components/ui/SubmitButton";
 import { fadeUp, slideLeft, EASE } from "../lib/motion";
 import { CONTACT } from "../lib/contact";
 
-const FIELDS = [
-  { name: "name", label: "Full name", type: "text", autoComplete: "name" },
-  { name: "email", label: "Email address", type: "email", autoComplete: "email" },
-  { name: "company", label: "Company (optional)", type: "text", autoComplete: "organization" },
+const INTERESTS = [
+  "Tax",
+  "Business Start-ups",
+  "Business Management",
+  "Financial & Accounting Services",
+  "Payroll",
+  "Advisory",
+  "Compliance",
+  "Portfolio/Asset Management",
+  "Cash Flow & Expense Planning",
+  "Insurance and Risk Management",
+  "Debt Reduction and Management",
 ];
 
 export default function Contact() {
   const [status, setStatus] = useState("idle");
+  const [interests, setInterests] = useState([]);
+
+  const toggleInterest = (label) => {
+    setInterests((prev) => (prev.includes(label) ? prev.filter((i) => i !== label) : [...prev, label]));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -86,30 +99,84 @@ export default function Contact() {
               className="flex flex-col gap-6"
             >
               <StaggerGroup stagger={0.08} className="flex flex-col gap-6">
-                {FIELDS.map((field) => (
-                  <Reveal variants={fadeUp} key={field.name} className="flex flex-col gap-2">
-                    <label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-wide text-navy/50">
-                      {field.label}
-                    </label>
-                    <input
-                      id={field.name}
-                      name={field.name}
-                      type={field.type}
-                      autoComplete={field.autoComplete}
-                      required={field.name !== "company"}
-                      className="rounded-xl border border-stone-dark/70 bg-stone-light px-4 py-3.5 text-navy outline-none transition-colors focus:border-navy"
-                    />
-                  </Reveal>
-                ))}
+                <Reveal variants={fadeUp}>
+                  <span className="text-xs font-semibold uppercase tracking-wide text-navy/50">Name</span>
+                  <div className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div className="flex flex-col gap-2">
+                      <label htmlFor="firstName" className="text-xs text-navy/50">
+                        First name <span className="text-navy/30">(required)</span>
+                      </label>
+                      <input
+                        id="firstName"
+                        name="firstName"
+                        type="text"
+                        autoComplete="given-name"
+                        required
+                        className="rounded-xl border border-stone-dark/70 bg-stone-light px-4 py-3.5 text-navy outline-none transition-colors focus:border-navy"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label htmlFor="lastName" className="text-xs text-navy/50">
+                        Last name <span className="text-navy/30">(required)</span>
+                      </label>
+                      <input
+                        id="lastName"
+                        name="lastName"
+                        type="text"
+                        autoComplete="family-name"
+                        required
+                        className="rounded-xl border border-stone-dark/70 bg-stone-light px-4 py-3.5 text-navy outline-none transition-colors focus:border-navy"
+                      />
+                    </div>
+                  </div>
+                </Reveal>
+
+                <Reveal variants={fadeUp} className="flex flex-col gap-2">
+                  <label htmlFor="email" className="text-xs font-semibold uppercase tracking-wide text-navy/50">
+                    Email <span className="normal-case text-navy/30">(required)</span>
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    className="rounded-xl border border-stone-dark/70 bg-stone-light px-4 py-3.5 text-navy outline-none transition-colors focus:border-navy"
+                  />
+                </Reveal>
+
+                <Reveal variants={fadeUp} className="flex flex-col gap-3">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-navy/50">
+                    I'm interested in help with... <span className="normal-case text-navy/30">(required)</span>
+                  </span>
+                  <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                    {INTERESTS.map((label) => (
+                      <label
+                        key={label}
+                        className="flex cursor-pointer items-center gap-2.5 rounded-lg px-1 py-1 text-sm text-navy/80 transition-colors hover:text-navy"
+                      >
+                        <input
+                          type="checkbox"
+                          name="interests"
+                          value={label}
+                          checked={interests.includes(label)}
+                          onChange={() => toggleInterest(label)}
+                          className="h-4 w-4 shrink-0 rounded border-stone-dark/70 text-navy accent-navy"
+                        />
+                        {label}
+                      </label>
+                    ))}
+                  </div>
+                </Reveal>
+
                 <Reveal variants={fadeUp} className="flex flex-col gap-2">
                   <label htmlFor="message" className="text-xs font-semibold uppercase tracking-wide text-navy/50">
-                    How can we help?
+                    Additional message <span className="normal-case text-navy/30">(optional)</span>
                   </label>
                   <textarea
                     id="message"
                     name="message"
                     rows={4}
-                    required
                     className="resize-none rounded-xl border border-stone-dark/70 bg-stone-light px-4 py-3.5 text-navy outline-none transition-colors focus:border-navy"
                   />
                 </Reveal>

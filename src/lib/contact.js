@@ -2,7 +2,7 @@
 // Phone uses Ofcom's reserved fictitious London range (020 7946 0xxx) —
 // looks like a real UK number but is guaranteed never to be allocated.
 export const CONTACT = {
-  email: "hello@dieux.co.uk",
+  email: "info@dieuxltd.com",
   phone: "+44 20 7946 0958",
   phoneDisplay: "020 7946 0958",
   address: ["1 Berkeley Street", "Mayfair, London W1J 8DJ"],

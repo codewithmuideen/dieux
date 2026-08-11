@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence, useScroll } from "framer-motion";
-import { Star, TrendingUp, ArrowRight, ShieldCheck, Play, PhoneCall, FileText, Settings2, Repeat, Search, BarChart3, Rocket, Activity, HeartHandshake } from "lucide-react";
+import { Star, TrendingUp, ArrowRight, ShieldCheck, Play, PhoneCall, FileText, Settings2, Repeat, Search, BarChart3, Rocket, Activity, HeartHandshake, Target, Eye, Flag, MessageCircle, Banknote, UserCheck, Zap } from "lucide-react";
 import Button from "../components/ui/Button";
 import TextReveal from "../components/ui/TextReveal";
 import Reveal from "../components/ui/Reveal";
@@ -41,15 +41,38 @@ const APPROACH_STEPS = [
   { icon: HeartHandshake, title: "Ongoing support", desc: "We stay close, answering questions and adjusting the plan as your business evolves." },
 ];
 
+const MISSION_VISION_GOAL = [
+  { icon: Target, title: "Our mission", desc: "To give founders and growing businesses the financial clarity they need to make confident decisions — without the jargon or the guesswork." },
+  { icon: Eye, title: "Our vision", desc: "To be the advisory partner businesses actually want to call — proactive, transparent, and genuinely invested in how they grow." },
+  { icon: Flag, title: "Our goal", desc: "To become the most trusted advisory partner for 1,000 growing UK businesses, one precise, well-kept set of books at a time." },
+];
+
+const DIFFERENTIATORS = [
+  { value: "98%", label: "Client retention, year on year." },
+  { value: "24h", label: "Average response time on any query." },
+  { value: "300+", label: "Businesses actively supported today." },
+  { value: "14+", label: "Years delivering expert guidance." },
+];
+
+const HUB_REASONS = [
+  { icon: MessageCircle, title: "Proactive support", desc: "We flag issues before you have to ask." },
+  { icon: Banknote, title: "Clear pricing", desc: "Fixed fees, no surprise invoices." },
+  { icon: UserCheck, title: "Dedicated advisor", desc: "One named contact who knows you." },
+  { icon: Zap, title: "Fast turnaround", desc: "Answers in hours, not weeks." },
+];
+
 export default function Home() {
   return (
     <>
       <Hero />
       <TrustMarquee />
       <AboutUs />
+      <MissionVisionGoal />
       <WhatWeDo />
       <OurProcess />
       <AdvisoryApproach />
+      <WhatSetsUsApart />
+      <WhyChooseUsHub />
       <WhyUsTeaser />
       <Quote />
       <Faq />
@@ -106,7 +129,8 @@ function Hero() {
           <img src={slide.image} alt="" className="h-full w-full object-cover" />
         </motion.div>
       </AnimatePresence>
-      <div className="absolute inset-0 bg-gradient-to-t from-panel via-panel/70 to-panel/30" />
+      <div className="absolute inset-0 bg-gradient-to-t from-panel/95 via-panel/55 to-panel/10" />
+      <div className="absolute inset-0 bg-gradient-to-r from-panel/65 via-panel/15 to-transparent" />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-28 pt-40 md:px-10 md:pt-32">
         <div className="max-w-3xl">
@@ -117,7 +141,7 @@ function Hero() {
             </span>
           </Reveal>
 
-          <div className="relative min-h-[320px] sm:min-h-[280px] md:min-h-[320px]">
+          <motion.div layout transition={{ duration: 0.5, ease: EASE }} className="overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div
                 key={index}
@@ -125,7 +149,6 @@ function Hero() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 1.06 }}
                 transition={{ duration: 0.6, ease: EASE }}
-                className="absolute inset-0"
               >
                 <h1 className="text-5xl font-bold leading-[1.05] tracking-tight text-on-panel sm:text-6xl md:text-7xl">
                   {slide.heading}
@@ -134,7 +157,7 @@ function Hero() {
                 <p className="mt-6 max-w-xl text-lg leading-relaxed text-on-panel/70">{slide.body}</p>
               </motion.div>
             </AnimatePresence>
-          </div>
+          </motion.div>
 
           <div className="mt-4 flex items-center gap-2" role="tablist" aria-label="Hero slides">
             {HERO_SLIDES.map((_, i) => (
@@ -238,6 +261,37 @@ function AboutUs() {
             </div>
           </div>
         </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function MissionVisionGoal() {
+  return (
+    <section className="bg-stone-light px-6 py-24 md:px-10 md:py-32">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeading
+          kicker="What drives us"
+          heading="Our mission, vision, and goal."
+          supporting="Three ideas that shape every decision we make on a client's behalf."
+          align="center"
+          className="mx-auto mb-16"
+        />
+        <StaggerGroup stagger={0.12} className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+          {MISSION_VISION_GOAL.map(({ icon: Icon, title, desc }) => (
+            <Reveal
+              key={title}
+              variants={fadeUp}
+              className="flex flex-col items-center gap-4 rounded-3xl border border-stone-dark/60 bg-cream p-8 text-center"
+            >
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-navy text-cream">
+                <Icon className="h-6 w-6" strokeWidth={1.75} />
+              </span>
+              <h3 className="text-xl font-bold text-navy">{title}</h3>
+              <p className="text-sm leading-relaxed text-navy/60">{desc}</p>
+            </Reveal>
+          ))}
+        </StaggerGroup>
       </div>
     </section>
   );
@@ -406,11 +460,103 @@ function AdvisoryApproach() {
   );
 }
 
+function WhatSetsUsApart() {
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-24 md:px-10 md:py-32">
+      <div className="grid grid-cols-1 overflow-hidden rounded-[2.5rem] md:grid-cols-2">
+        <div className="flex flex-col justify-center gap-5 bg-navy p-10 text-cream md:p-14">
+          <span className="text-xs font-semibold uppercase tracking-[0.25em] text-cream/60">
+            What sets us apart
+          </span>
+          <h2 className="text-3xl font-bold leading-tight md:text-4xl">
+            The numbers speak for themselves.
+          </h2>
+          <p className="max-w-sm text-cream/60">
+            We could tell you why clients stay — or we could just show you what
+            they experience, quarter after quarter.
+          </p>
+        </div>
+
+        <StaggerGroup stagger={0.1} className="flex flex-col justify-center gap-1 bg-stone-light p-10 md:p-14">
+          {DIFFERENTIATORS.map(({ value, label }, i) => (
+            <Reveal
+              key={value}
+              variants={fadeUp}
+              className="flex items-center gap-5 border-b border-stone-dark/60 py-5 last:border-b-0"
+            >
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gold text-lg font-bold text-navy">
+                {i + 1}
+              </span>
+              <div>
+                <p className="text-xl font-bold text-navy">{value}</p>
+                <p className="mt-0.5 text-sm text-navy/60">{label}</p>
+              </div>
+            </Reveal>
+          ))}
+        </StaggerGroup>
+      </div>
+    </section>
+  );
+}
+
+function WhyChooseUsHub() {
+  return (
+    <section className="bg-stone-light px-6 py-24 md:px-10 md:py-32">
+      <div className="mx-auto max-w-6xl">
+        <SectionHeading
+          kicker="Why choose us"
+          heading="Smart advisory. Real results."
+          align="center"
+          className="mx-auto mb-16 md:mb-20"
+        />
+
+        <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-3 md:gap-6">
+          <StaggerGroup stagger={0.12} className="flex flex-row justify-center gap-6 md:flex-col md:justify-end">
+            {HUB_REASONS.slice(0, 2).map((r) => (
+              <HubItem key={r.title} reason={r} align="right" />
+            ))}
+          </StaggerGroup>
+
+          <Reveal variants={scaleIn} className="order-first flex justify-center md:order-none">
+            <span className="relative flex h-32 w-32 items-center justify-center rounded-full bg-navy text-cream shadow-xl md:h-40 md:w-40">
+              <span className="absolute inset-0 rounded-full ring-8 ring-navy/10" aria-hidden="true" />
+              <HeartHandshake className="h-12 w-12 md:h-14 md:w-14" strokeWidth={1.25} />
+            </span>
+          </Reveal>
+
+          <StaggerGroup stagger={0.12} className="flex flex-row justify-center gap-6 md:flex-col">
+            {HUB_REASONS.slice(2, 4).map((r) => (
+              <HubItem key={r.title} reason={r} align="left" />
+            ))}
+          </StaggerGroup>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HubItem({ reason: { icon: Icon, title, desc }, align }) {
+  return (
+    <Reveal
+      variants={fadeUp}
+      className={`flex max-w-[220px] items-start gap-3 ${align === "right" ? "md:flex-row-reverse md:text-right" : ""}`}
+    >
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cream text-navy shadow-sm">
+        <Icon className="h-4.5 w-4.5" strokeWidth={1.75} />
+      </span>
+      <div>
+        <h3 className="text-sm font-bold text-navy">{title}</h3>
+        <p className="mt-0.5 text-xs leading-relaxed text-navy/60">{desc}</p>
+      </div>
+    </Reveal>
+  );
+}
+
 function WhyUsTeaser() {
   return (
     <section className="mx-auto grid max-w-7xl grid-cols-1 gap-14 px-6 py-24 md:grid-cols-2 md:px-10 md:py-32">
       <RevealImage
-        src={IMAGES.whyUsTeam}
+        src={IMAGES.teamCulture}
         alt="The Dieux team working together"
         wrapperClassName="h-[420px] rounded-2xl md:h-full"
       />
