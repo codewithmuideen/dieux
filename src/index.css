@@ -3,10 +3,8 @@
 @theme {
   --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
 
-  /* Deep teal + vivid green + mint. `navy`/`cream`/`stone*`/`ink` are the
-     THEME-SWAPPABLE chrome tokens (redefined under html.dark below).
-     `panel`/`on-panel` are FIXED — for sections deliberately dark in both
-     themes (hero, footer, quote, mobile menu, preloader). Never swap those. */
+  /* Deep teal + vivid green + mint. `panel`/`on-panel` are for sections
+     deliberately dark regardless of context (hero, footer, quote, mobile menu). */
   --color-ink: #0d211f;
   --color-navy: #0e2b2b;
   --color-navy-light: #1c4442;
@@ -25,23 +23,6 @@
   --animate-float: float 6s ease-in-out infinite;
   --animate-spin-slow: spin 12s linear infinite;
   --animate-spin-slower: spin 24s linear infinite;
-}
-
-/* Dark mode: only the swappable chrome tokens change. Panel tokens above
-   stay fixed so hero/footer/quote/etc. stay dark in both themes. */
-html.dark {
-  --color-ink: #eaf3ee;
-  --color-navy: #eaf3ee;
-  --color-navy-light: #c3ddd2;
-  --color-stone: #14231f;
-  --color-stone-light: #101c1a;
-  --color-stone-dark: #24352f;
-  --color-cream: #0a1615;
-}
-
-html.dark ::selection {
-  background: var(--color-gold);
-  color: var(--color-panel);
 }
 
 @keyframes shimmer {

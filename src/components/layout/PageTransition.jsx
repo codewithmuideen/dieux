@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import logoMark from "../../assets/brand/mark-light.svg";
 import useReducedMotion from "../../hooks/useReducedMotion";
 import { EASE } from "../../lib/motion";
 
@@ -35,7 +34,6 @@ const reducedVariants = {
 export default function PageTransition({ children }) {
   const location = useLocation();
   const prefersReduced = useReducedMotion();
-  const [sweeping, setSweeping] = useState(false);
   const firstRender = useRef(true);
 
   useEffect(() => {
@@ -43,48 +41,22 @@ export default function PageTransition({ children }) {
       firstRender.current = false;
       return;
     }
-    if (prefersReduced) {
-      window.scrollTo(0, 0);
-      return;
-    }
-    setSweeping(true);
-    const scrollTimer = setTimeout(() => window.scrollTo(0, 0), 220);
-    const endTimer = setTimeout(() => setSweeping(false), 480);
-    return () => {
-      clearTimeout(scrollTimer);
-      clearTimeout(endTimer);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    window.scrollTo(0, 0);
   }, [location.pathname]);
 
   const variants = prefersReduced ? reducedVariants : pageVariants;
 
   return (
-    <>
-      <AnimatePresence>
-        {sweeping && (
-          <motion.div
-            className="pointer-events-none fixed inset-0 z-[95] flex items-center justify-center bg-panel"
-            initial={{ x: "-100%" }}
-            animate={{ x: "0%" }}
-            exit={{ x: "100%" }}
-            transition={{ duration: 0.4, ease: EASE }}
-          >
-            <img src={logoMark} alt="" className="h-9 w-9 opacity-90" />
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={location.pathname}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          variants={variants}
-        >
-          {children}
-        </motion.div>
-      </AnimatePresence>
-    </>
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={location.pathname}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={variants}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
   );
 }

@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { Star, TrendingUp, ArrowRight, ShieldCheck, Play, PhoneCall, FileText, Settings2, Repeat } from "lucide-react";
+import { motion, AnimatePresence, useScroll } from "framer-motion";
+import { Star, TrendingUp, ArrowRight, ShieldCheck, Play, PhoneCall, FileText, Settings2, Repeat, Search, BarChart3, Rocket, Activity, HeartHandshake } from "lucide-react";
 import Button from "../components/ui/Button";
 import TextReveal from "../components/ui/TextReveal";
 import Reveal from "../components/ui/Reveal";
@@ -10,7 +10,6 @@ import SectionHeading from "../components/ui/SectionHeading";
 import RevealImage from "../components/ui/RevealImage";
 import ScrollIndicator from "../components/ui/ScrollIndicator";
 import Marquee from "../components/ui/Marquee";
-import AvatarStack from "../components/ui/AvatarStack";
 import Faq from "../components/ui/Faq";
 import { StickyStackItem } from "../components/ui/StickyStack";
 import useReducedMotion from "../hooks/useReducedMotion";
@@ -35,11 +34,11 @@ const PROCESS_STEPS = [
 ];
 
 const APPROACH_STEPS = [
-  { title: "Discover", desc: "We start by understanding your goals, current numbers, and what success looks like from here." },
-  { title: "Analyse & plan", desc: "We review your finances and build a tailored plan around structure, risk and growth." },
-  { title: "Implement", desc: "We put the plan into action — systems connected, filings scheduled, nothing left loose." },
-  { title: "Monitor", desc: "We track performance continuously so nothing drifts unnoticed between check-ins." },
-  { title: "Ongoing support", desc: "We stay close, answering questions and adjusting the plan as your business evolves." },
+  { icon: Search, title: "Discover", desc: "We start by understanding your goals, current numbers, and what success looks like from here." },
+  { icon: BarChart3, title: "Analyse & plan", desc: "We review your finances and build a tailored plan around structure, risk and growth." },
+  { icon: Rocket, title: "Implement", desc: "We put the plan into action — systems connected, filings scheduled, nothing left loose." },
+  { icon: Activity, title: "Monitor", desc: "We track performance continuously so nothing drifts unnoticed between check-ins." },
+  { icon: HeartHandshake, title: "Ongoing support", desc: "We stay close, answering questions and adjusting the plan as your business evolves." },
 ];
 
 export default function Home() {
@@ -59,41 +58,55 @@ export default function Home() {
   );
 }
 
+const HERO_SLIDES = [
+  {
+    image: IMAGES.heroPoster,
+    tagline: "“Numbers you understand. Decisions you trust.”",
+    heading: "Financial clarity for businesses built to last.",
+    body: "Dieux is the accounting and advisory partner for founders and growing teams who want their numbers handled with precision — so they can get back to building.",
+  },
+  {
+    image: IMAGES.whyUsHandshake,
+    tagline: "“Advisory that feels like it's actually on your side.”",
+    heading: "Trusted by 300+ growing businesses.",
+    body: "From first-time founders to established teams, every client gets the same proactive, precise partnership — no matter the size of the engagement.",
+  },
+  {
+    image: IMAGES.advisoryApproach,
+    tagline: "“Every number checked. Every deadline met.”",
+    heading: "£40M+ managed with precision and care.",
+    body: "Real-time numbers, fixed transparent pricing, and a dedicated advisor who actually knows your business — that's the whole point of Dieux.",
+  },
+];
+
 function Hero() {
   const ref = useRef(null);
-  const videoRef = useRef(null);
   const prefersReduced = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const overlayOpacity = useTransform(scrollYProgress, [0, 1], [0.6, 0.85]);
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    if (prefersReduced || !videoRef.current) return;
-    videoRef.current.play?.().catch(() => {});
+    if (prefersReduced) return;
+    const t = setInterval(() => setIndex((i) => (i + 1) % HERO_SLIDES.length), 6000);
+    return () => clearInterval(t);
   }, [prefersReduced]);
+
+  const slide = HERO_SLIDES[index];
 
   return (
     <section ref={ref} className="relative flex min-h-screen items-center overflow-hidden bg-panel">
-      <div className="absolute inset-0 h-full w-full">
-        {prefersReduced ? (
-          <img src={IMAGES.heroPoster} alt="" className="h-full w-full object-cover" />
-        ) : (
-          <video
-            ref={videoRef}
-            className="h-full w-full object-cover"
-            src={IMAGES.heroVideo}
-            poster={IMAGES.heroPoster}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-          />
-        )}
-      </div>
-      <motion.div
-        style={prefersReduced ? undefined : { opacity: overlayOpacity }}
-        className="absolute inset-0 bg-gradient-to-t from-panel via-panel/70 to-panel/35"
-      />
+      <AnimatePresence mode="sync">
+        <motion.div
+          key={index}
+          className="absolute inset-0"
+          initial={{ opacity: 0, scale: 1.1 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ opacity: { duration: 1, ease: EASE }, scale: { duration: 6, ease: "linear" } }}
+        >
+          <img src={slide.image} alt="" className="h-full w-full object-cover" />
+        </motion.div>
+      </AnimatePresence>
+      <div className="absolute inset-0 bg-gradient-to-t from-panel via-panel/70 to-panel/30" />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-28 pt-40 md:px-10 md:pt-32">
         <div className="max-w-3xl">
@@ -104,59 +117,41 @@ function Hero() {
             </span>
           </Reveal>
 
-          <TextReveal
-            as="h1"
-            text="Financial clarity for businesses built to last."
-            className="text-5xl font-bold leading-[1.05] tracking-tight text-on-panel sm:text-6xl md:text-7xl"
-          />
+          <div className="relative min-h-[320px] sm:min-h-[280px] md:min-h-[320px]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.06 }}
+                transition={{ duration: 0.6, ease: EASE }}
+                className="absolute inset-0"
+              >
+                <h1 className="text-5xl font-bold leading-[1.05] tracking-tight text-on-panel sm:text-6xl md:text-7xl">
+                  {slide.heading}
+                </h1>
+                <p className="mt-5 text-xl font-medium italic text-gold-light sm:text-2xl">{slide.tagline}</p>
+                <p className="mt-6 max-w-xl text-lg leading-relaxed text-on-panel/70">{slide.body}</p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-          <Reveal variants={fadeUp} delay={0.5} className="mt-7 max-w-xl text-lg leading-relaxed text-on-panel/70">
-            Dieux is the accounting and advisory partner for founders and growing
-            teams who want their numbers handled with precision — so they can get
-            back to building.
-          </Reveal>
-
-          <StaggerGroup stagger={0.1} delayChildren={0.7} className="mt-10 flex flex-wrap items-center gap-4">
-            <Reveal variants={fadeUp}>
-              <Button to="/services" variant="light">
-                Explore services
-              </Button>
-            </Reveal>
-            <Reveal variants={fadeUp}>
-              <Button to="/contact" variant="outlineLight" icon={null}>
-                Book a call
-              </Button>
-            </Reveal>
-          </StaggerGroup>
-
-          <Reveal variants={fadeUp} delay={0.85} className="mt-10 flex flex-wrap items-center gap-5">
-            <AvatarStack />
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-1 text-gold">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="h-3.5 w-3.5 fill-current" />
-                ))}
-              </div>
-              <span className="text-xs text-on-panel/60">300+ businesses trust Dieux</span>
-            </div>
-          </Reveal>
+          <div className="mt-4 flex items-center gap-2" role="tablist" aria-label="Hero slides">
+            {HERO_SLIDES.map((_, i) => (
+              <button
+                key={i}
+                role="tab"
+                aria-selected={i === index}
+                aria-label={`Show slide ${i + 1}`}
+                onClick={() => setIndex(i)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  i === index ? "w-8 bg-gold" : "w-1.5 bg-on-panel/30 hover:bg-on-panel/50"
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: EASE, delay: 1.1 }}
-        className="absolute bottom-28 right-6 z-10 hidden items-center gap-3 rounded-2xl bg-cream/95 px-5 py-4 shadow-2xl backdrop-blur-sm md:right-10 md:flex"
-      >
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold">
-          <TrendingUp className="h-5 w-5" strokeWidth={2} />
-        </span>
-        <div>
-          <p className="text-lg font-bold leading-none text-navy">£40M+</p>
-          <p className="mt-1 text-xs text-navy/55">Managed with care</p>
-        </div>
-      </motion.div>
 
       <div className="absolute inset-x-0 bottom-8 z-10 flex justify-center">
         <ScrollIndicator dark />
@@ -360,18 +355,14 @@ function ProcessCard({ step, index }) {
   );
 }
 
-const APPROACH_IMAGES = [
-  IMAGES.heroPoster,
-  IMAGES.aboutStory,
-  IMAGES.whyUsHandshake,
-  IMAGES.advisoryApproach,
-  IMAGES.whyUsTeam,
-];
-
 function AdvisoryApproach() {
+  const ref = useRef(null);
+  const prefersReduced = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.7", "end 0.5"] });
+
   return (
-    <section className="bg-stone-light px-6 py-24 md:px-10 md:py-32">
-      <div className="mx-auto max-w-5xl">
+    <section ref={ref} className="bg-stone-light px-6 py-24 md:px-10 md:py-32">
+      <div className="mx-auto max-w-3xl">
         <SectionHeading
           kicker="How we work"
           heading="Our financial advisory approach."
@@ -379,41 +370,39 @@ function AdvisoryApproach() {
           align="center"
           className="mx-auto mb-16 md:mb-20"
         />
-        <div className="flex flex-col">
-          {APPROACH_STEPS.map((step, i) => (
-            <ApproachRow key={step.title} step={step} index={i} image={APPROACH_IMAGES[i % APPROACH_IMAGES.length]} />
-          ))}
+
+        <div className="relative">
+          <div className="absolute left-6 top-2 bottom-2 w-px bg-stone-dark/70 md:left-8" aria-hidden="true" />
+          <motion.div
+            className="absolute left-6 top-2 w-px origin-top bg-gold md:left-8"
+            style={{ height: "100%", scaleY: prefersReduced ? 1 : scrollYProgress }}
+            aria-hidden="true"
+          />
+
+          <div className="flex flex-col gap-10 md:gap-12">
+            {APPROACH_STEPS.map((step, i) => (
+              <Reveal
+                key={step.title}
+                variants={fadeUp}
+                delay={i * 0.05}
+                className="relative flex gap-6 pl-16 md:gap-8 md:pl-20"
+              >
+                <span className="absolute left-0 top-0 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-gold bg-stone-light text-navy md:h-16 md:w-16">
+                  <step.icon className="h-5 w-5 md:h-6 md:w-6" strokeWidth={1.75} />
+                </span>
+                <div className="pt-1 md:pt-2">
+                  <span className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">
+                    Step {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="mt-1 text-xl font-bold text-navy md:text-2xl">{step.title}</h3>
+                  <p className="mt-2 max-w-md text-base leading-relaxed text-navy/60">{step.desc}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function ApproachRow({ step, index, image }) {
-  const flip = index % 2 === 1;
-  const num = String(index + 1).padStart(2, "0");
-
-  return (
-    <Reveal
-      variants={flip ? slideRight : slideLeft}
-      className="grid grid-cols-1 items-center gap-6 border-t border-stone-dark/60 py-10 first:border-t-0 first:pt-0 md:grid-cols-2 md:gap-12 md:py-14"
-    >
-      <div className={`flex justify-center ${flip ? "md:order-2" : ""}`}>
-        <span
-          aria-hidden="true"
-          className="select-none bg-cover bg-center bg-clip-text text-[6rem] leading-none font-black text-transparent sm:text-[8rem] md:text-[10rem]"
-          style={{ backgroundImage: `url(${image})` }}
-        >
-          {num}
-        </span>
-      </div>
-      <div className={flip ? "md:order-1 md:text-right" : ""}>
-        <h3 className="text-2xl font-bold text-navy md:text-3xl">{step.title}</h3>
-        <p className={`mt-3 max-w-md text-base leading-relaxed text-navy/60 ${flip ? "md:ml-auto" : ""}`}>
-          {step.desc}
-        </p>
-      </div>
-    </Reveal>
   );
 }
 

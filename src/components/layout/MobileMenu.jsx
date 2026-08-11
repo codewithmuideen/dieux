@@ -1,29 +1,24 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { Mail, Phone } from "lucide-react";
+import Button from "../ui/Button";
 import { NAV_LINKS, CONTACT } from "../../lib/contact";
 import { EASE } from "../../lib/motion";
 
 const panel = {
-  closed: { clipPath: "circle(0% at calc(100% - 2.75rem) 2.75rem)" },
-  open: {
-    clipPath: "circle(150% at calc(100% - 2.75rem) 2.75rem)",
-    transition: { duration: 0.7, ease: EASE },
-  },
-  exit: {
-    clipPath: "circle(0% at calc(100% - 2.75rem) 2.75rem)",
-    transition: { duration: 0.5, ease: EASE },
-  },
+  closed: { opacity: 0, y: -8 },
+  open: { opacity: 1, y: 0, transition: { duration: 0.3, ease: EASE } },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.2, ease: EASE } },
 };
 
 const list = {
-  open: { transition: { staggerChildren: 0.07, delayChildren: 0.25 } },
+  open: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
   closed: {},
 };
 
 const item = {
-  closed: { opacity: 0, y: 24 },
-  open: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } },
+  closed: { opacity: 0, y: 8 },
+  open: { opacity: 1, y: 0, transition: { duration: 0.3, ease: EASE } },
 };
 
 export default function MobileMenu({ open, onClose }) {
@@ -31,26 +26,21 @@ export default function MobileMenu({ open, onClose }) {
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-40 flex flex-col justify-between bg-panel px-8 pb-10 pt-28 text-on-panel md:hidden"
+          className="fixed inset-x-0 top-[68px] z-40 max-h-[calc(100vh-68px)] overflow-y-auto bg-cream shadow-xl md:hidden"
           initial="closed"
           animate="open"
           exit="exit"
           variants={panel}
         >
-          <motion.nav
-            className="flex flex-col gap-2"
-            variants={list}
-            initial="closed"
-            animate="open"
-          >
+          <motion.nav className="flex flex-col gap-1 p-3" variants={list} initial="closed" animate="open">
             {NAV_LINKS.map((link) => (
-              <motion.div key={link.to} variants={item} className="overflow-hidden">
+              <motion.div key={link.to} variants={item}>
                 <NavLink
                   to={link.to}
                   onClick={onClose}
                   className={({ isActive }) =>
-                    `block py-3 text-4xl font-bold tracking-tight transition-colors ${
-                      isActive ? "text-gold" : "text-on-panel/90 hover:text-gold"
+                    `block rounded-2xl px-4 py-3 text-base font-semibold transition-colors ${
+                      isActive ? "bg-stone text-navy" : "text-navy/70 hover:bg-stone/60 hover:text-navy"
                     }`
                   }
                 >
@@ -60,13 +50,16 @@ export default function MobileMenu({ open, onClose }) {
             ))}
           </motion.nav>
 
-          <motion.div variants={item} className="flex flex-col gap-3 text-sm text-on-panel/60">
-            <a href={`mailto:${CONTACT.email}`} className="flex items-center gap-2 hover:text-gold">
-              <Mail className="h-4 w-4" /> {CONTACT.email}
+          <motion.div variants={item} className="flex flex-col gap-3 border-t border-navy/10 p-4">
+            <a href={`mailto:${CONTACT.email}`} className="flex items-center gap-2 text-sm text-navy/60 transition-colors hover:text-gold">
+              <Mail className="h-4 w-4 shrink-0" /> {CONTACT.email}
             </a>
-            <a href={`tel:${CONTACT.phone}`} className="flex items-center gap-2 hover:text-gold">
-              <Phone className="h-4 w-4" /> {CONTACT.phoneDisplay}
+            <a href={`tel:${CONTACT.phone}`} className="flex items-center gap-2 text-sm text-navy/60 transition-colors hover:text-gold">
+              <Phone className="h-4 w-4 shrink-0" /> {CONTACT.phoneDisplay}
             </a>
+            <Button to="/contact" variant="primary" className="mt-1 w-full !justify-center">
+              Contact us
+            </Button>
           </motion.div>
         </motion.div>
       )}
