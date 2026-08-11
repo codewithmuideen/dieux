@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { Star, TrendingUp, ArrowRight, ArrowLeft, ShieldCheck, Play, PhoneCall, FileText, Settings2, Repeat } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Star, TrendingUp, ArrowRight, ShieldCheck, Play, PhoneCall, FileText, Settings2, Repeat } from "lucide-react";
 import Button from "../components/ui/Button";
 import TextReveal from "../components/ui/TextReveal";
 import Reveal from "../components/ui/Reveal";
@@ -12,6 +12,7 @@ import ScrollIndicator from "../components/ui/ScrollIndicator";
 import Marquee from "../components/ui/Marquee";
 import AvatarStack from "../components/ui/AvatarStack";
 import Faq from "../components/ui/Faq";
+import { StickyStackItem } from "../components/ui/StickyStack";
 import useReducedMotion from "../hooks/useReducedMotion";
 import { fadeUp, slideLeft, slideRight, scaleIn, EASE } from "../lib/motion";
 import { IMAGES } from "../lib/images";
@@ -248,78 +249,49 @@ function AboutUs() {
 }
 
 function WhatWeDo() {
-  const [index, setIndex] = useState(0);
-  const prefersReduced = useReducedMotion();
-
-  useEffect(() => {
-    if (prefersReduced) return;
-    const t = setInterval(() => setIndex((i) => (i + 1) % SERVICES.length), 4500);
-    return () => clearInterval(t);
-  }, [prefersReduced]);
-
-  const service = SERVICES[index];
-  const next = () => setIndex((i) => (i + 1) % SERVICES.length);
-  const prev = () => setIndex((i) => (i - 1 + SERVICES.length) % SERVICES.length);
-
   return (
     <section className="mx-auto max-w-7xl px-6 py-12 md:px-10 md:py-16">
-      <div className="grid grid-cols-1 gap-10 overflow-hidden rounded-3xl bg-navy p-8 text-cream md:grid-cols-2 md:p-14">
-        <Reveal variants={slideLeft} className="flex flex-col justify-center gap-6">
+      <Reveal
+        variants={slideLeft}
+        className="flex flex-col gap-8 rounded-3xl bg-navy p-8 text-cream md:flex-row md:items-center md:justify-between md:p-14"
+      >
+        <div className="flex flex-col gap-5">
           <span className="w-fit rounded-full bg-cream/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-cream/70">
             What we do
           </span>
-          <h2 className="text-3xl font-bold leading-tight md:text-4xl">
+          <h2 className="max-w-xl text-3xl font-bold leading-tight md:text-4xl">
             Comprehensive financial services, under one roof.
           </h2>
-          <p className="text-cream/60">
+          <p className="max-w-lg text-cream/60">
             Every engagement draws from the same five disciplines — mixed and
             matched to what your business actually needs, delivered by one
             accountable team.
           </p>
-          <div className="mt-2 flex items-center gap-4">
-            <Button to="/services" variant="light">
-              View all services
-            </Button>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={prev}
-                aria-label="Previous service"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-cream/25 text-cream transition-colors duration-300 hover:bg-cream hover:text-navy"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </button>
-              <button
-                onClick={next}
-                aria-label="Next service"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-cream/25 text-cream transition-colors duration-300 hover:bg-cream hover:text-navy"
-              >
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        </Reveal>
-
-        <div className="relative min-h-[300px] overflow-hidden rounded-2xl md:min-h-[400px]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={service.slug}
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -40 }}
-              transition={{ duration: 0.5, ease: EASE }}
-              className="absolute inset-0"
-            >
-              <Link to={`/services/${service.slug}`} className="block h-full w-full">
-                <img src={service.image} alt={service.title} className="h-full w-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-navy/85 via-navy/10 to-transparent" />
-                <div className="absolute bottom-0 left-0 p-6">
-                  <span className="text-xs font-semibold text-gold">{service.number}</span>
-                  <h3 className="mt-1 text-2xl font-bold text-cream">{service.title}</h3>
-                </div>
-              </Link>
-            </motion.div>
-          </AnimatePresence>
         </div>
+        <Button to="/services" variant="light" className="shrink-0">
+          View all services
+        </Button>
+      </Reveal>
+
+      <div className="mt-6">
+        {SERVICES.map((service, i) => (
+          <StickyStackItem key={service.slug} index={i} runway="26vh">
+            <Link
+              to={`/services/${service.slug}`}
+              className="group flex items-center gap-5 rounded-3xl border border-stone-dark/60 bg-cream p-6 shadow-[0_25px_50px_-30px_rgba(14,43,43,0.3)] transition-shadow duration-300 hover:shadow-[0_25px_60px_-25px_rgba(14,43,43,0.4)] md:p-7"
+            >
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-stone text-navy md:h-16 md:w-16">
+                <service.icon className="h-6 w-6" strokeWidth={1.5} />
+              </span>
+              <div className="flex-1">
+                <span className="text-xs font-semibold text-gold">{service.number}</span>
+                <h3 className="mt-1 text-xl font-bold text-navy md:text-2xl">{service.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-navy/60 md:text-base">{service.short}</p>
+              </div>
+              <ArrowRight className="h-5 w-5 shrink-0 text-navy/40 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-gold" />
+            </Link>
+          </StickyStackItem>
+        ))}
       </div>
     </section>
   );
