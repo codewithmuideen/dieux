@@ -82,7 +82,12 @@ export default function Footer() {
 
         <div className="flex flex-col-reverse items-center justify-between gap-3 pt-8 text-xs text-on-panel/40 md:flex-row">
           <p>&copy; {new Date().getFullYear()} Dieux Accounting &amp; Advisory. All rights reserved.</p>
-          <p>{CONTACT.address[0]}, {CONTACT.address[1]}</p>
+          <div className="flex items-center gap-5">
+            <NavLink to="/privacy-policy" className="transition-colors hover:text-gold">
+              Privacy Policy
+            </NavLink>
+            <p>{CONTACT.address[0]}, {CONTACT.address[1]}</p>
+          </div>
         </div>
       </div>
     </footer>

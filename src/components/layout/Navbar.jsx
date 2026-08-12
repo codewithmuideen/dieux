@@ -1,16 +1,23 @@
 import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown, ArrowRight } from "lucide-react";
 import logo from "../../assets/brand/logo.svg";
 import Button from "../ui/Button";
 import MobileMenu from "./MobileMenu";
 import { NAV_LINKS } from "../../lib/contact";
 import { SERVICES } from "../../lib/services";
+import { EASE } from "../../lib/motion";
+
+const megaMenu = {
+  closed: { opacity: 0, y: 8, scale: 0.98 },
+  open: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.25, ease: EASE } },
+};
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -47,7 +54,12 @@ export default function Navbar() {
           <nav className="hidden items-center gap-8 md:flex">
             {NAV_LINKS.map((link) =>
               link.to === "/services" ? (
-                <div key={link.to} className="group relative">
+                <div
+                  key={link.to}
+                  className="relative"
+                  onMouseEnter={() => setServicesOpen(true)}
+                  onMouseLeave={() => setServicesOpen(false)}
+                >
                   <NavLink
                     to={link.to}
                     className={({ isActive }) =>
@@ -57,21 +69,52 @@ export default function Navbar() {
                     }
                   >
                     {link.label}
-                    <ChevronDown className="h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-180" />
+                    <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-300 ${servicesOpen ? "rotate-180" : ""}`} />
                   </NavLink>
-                  <div className="invisible absolute left-1/2 top-full z-50 w-56 -translate-x-1/2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                    <div className="overflow-hidden rounded-2xl bg-cream p-2 shadow-2xl ring-1 ring-navy/10">
-                      {SERVICES.map((s) => (
-                        <NavLink
-                          key={s.slug}
-                          to={`/services/${s.slug}`}
-                          className="block rounded-xl px-4 py-2.5 text-sm font-medium text-navy/70 transition-colors hover:bg-stone hover:text-navy"
-                        >
-                          {s.title}
-                        </NavLink>
-                      ))}
-                    </div>
-                  </div>
+                  <AnimatePresence>
+                    {servicesOpen && (
+                      <motion.div
+                        initial="closed"
+                        animate="open"
+                        exit="closed"
+                        variants={megaMenu}
+                        className="absolute left-1/2 top-full z-50 w-[560px] -translate-x-1/2 pt-4"
+                      >
+                        <div className="overflow-hidden rounded-3xl bg-cream p-6 shadow-2xl ring-1 ring-navy/10">
+                          <div className="grid grid-cols-2 gap-1">
+                            {SERVICES.map((s, i) => {
+                              const Icon = s.icon;
+                              return (
+                                <motion.div
+                                  key={s.slug}
+                                  initial={{ opacity: 0, y: 6 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  transition={{ delay: i * 0.02, duration: 0.2 }}
+                                >
+                                  <NavLink
+                                    to={`/services/${s.slug}`}
+                                    className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-navy/70 transition-all duration-200 hover:translate-x-1 hover:bg-stone hover:text-navy"
+                                  >
+                                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-stone text-navy transition-transform duration-300 group-hover:scale-110 group-hover:bg-gold">
+                                      <Icon className="h-4 w-4" strokeWidth={1.75} />
+                                    </span>
+                                    {s.title}
+                                  </NavLink>
+                                </motion.div>
+                              );
+                            })}
+                          </div>
+                          <NavLink
+                            to="/services"
+                            className="group mt-3 flex items-center justify-between rounded-xl bg-navy px-4 py-3 text-sm font-semibold text-cream transition-colors hover:bg-navy-light"
+                          >
+                            View all services
+                            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                          </NavLink>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               ) : (
                 <NavLink

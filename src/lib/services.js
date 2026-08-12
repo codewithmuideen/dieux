@@ -1,4 +1,4 @@
-import { Rocket, Calculator, Wallet, ReceiptText, ShieldCheck } from "lucide-react";
+import { Rocket, Calculator, Wallet, ReceiptText, ShieldCheck, Briefcase, Lightbulb, PieChart, PiggyBank, Umbrella, TrendingDown } from "lucide-react";
 import { SERVICE_IMAGES } from "./images";
 
 export const SERVICES = [
@@ -81,6 +81,96 @@ export const SERVICES = [
       "Ongoing regulatory monitoring",
     ],
     image: SERVICE_IMAGES["compliance"],
+  },
+  {
+    slug: "business-management",
+    number: "06",
+    icon: Briefcase,
+    title: "Business Management",
+    short: "Structure and oversight that keeps operations running smoothly.",
+    description:
+      "From governance to day-to-day operational decisions, we help you build the management structure that lets a growing business scale without losing control of the details.",
+    features: [
+      "Operational structure & governance",
+      "KPI tracking & reporting cadence",
+      "Management information systems",
+      "Board & stakeholder reporting",
+    ],
+  },
+  {
+    slug: "advisory",
+    number: "07",
+    icon: Lightbulb,
+    title: "Advisory",
+    short: "Strategic guidance for the decisions that matter most.",
+    description:
+      "Beyond the numbers, we act as a sounding board for the calls that shape where your business goes next — funding, structure, growth, exit.",
+    features: [
+      "Strategic planning sessions",
+      "Funding & investment readiness",
+      "Growth & scaling strategy",
+      "Exit & succession planning",
+    ],
+  },
+  {
+    slug: "portfolio-management",
+    number: "08",
+    icon: PieChart,
+    title: "Portfolio & Asset Management",
+    short: "Your business assets, actively managed and optimised.",
+    description:
+      "We help growing businesses track, protect and grow the assets on their balance sheet — from cash reserves to equipment to investments.",
+    features: [
+      "Asset register & valuation tracking",
+      "Investment strategy alignment",
+      "Depreciation & capital planning",
+      "Portfolio performance reporting",
+    ],
+  },
+  {
+    slug: "cash-flow-planning",
+    number: "09",
+    icon: PiggyBank,
+    title: "Cash Flow & Expense Planning",
+    short: "Know what's coming in, what's going out, and when.",
+    description:
+      "Cash flow surprises sink otherwise-healthy businesses. We build rolling forecasts and expense controls so you always know where you stand.",
+    features: [
+      "Rolling cash flow forecasts",
+      "Expense policy & controls",
+      "Working capital optimisation",
+      "Scenario & runway planning",
+    ],
+  },
+  {
+    slug: "insurance-risk",
+    number: "10",
+    icon: Umbrella,
+    title: "Insurance & Risk Management",
+    short: "Protection built around the risks your business actually faces.",
+    description:
+      "We assess where your business is exposed and help you put the right cover and controls in place — so one bad event doesn't become an existential one.",
+    features: [
+      "Risk assessment & mapping",
+      "Business insurance review",
+      "Key person & liability cover",
+      "Business continuity planning",
+    ],
+  },
+  {
+    slug: "debt-management",
+    number: "11",
+    icon: TrendingDown,
+    title: "Debt Reduction & Management",
+    short: "A clear, structured path to paying down what you owe.",
+    description:
+      "Whether it's a funding round gone the wrong direction or historic debt weighing on decisions, we build a realistic plan to bring it under control.",
+    features: [
+      "Debt structure review",
+      "Repayment & consolidation planning",
+      "Lender & creditor negotiation support",
+      "Credit position monitoring",
+    ],
   },
 ];
 

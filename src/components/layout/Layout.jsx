@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import PageTransition from "./PageTransition";
 import PageLoader from "../loading/PageLoader";
 import ScrollToTopButton from "../ui/ScrollToTopButton";
+import CookieConsent from "../ui/CookieConsent";
 
 export default function Layout() {
   const location = useLocation();
@@ -32,6 +33,7 @@ export default function Layout() {
       </main>
       <Footer />
       <ScrollToTopButton />
+      <CookieConsent />
     </div>
   );
 }

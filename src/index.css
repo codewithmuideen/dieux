@@ -38,8 +38,15 @@
   box-sizing: border-box;
 }
 
+/* overflow-x lives on html, not body: the root element's overflow is
+   special-cased by the UA to control the viewport directly, so it clips
+   horizontal overflow without turning body into its own scroll container.
+   overflow-x on body forces a computed overflow-y:auto on body too (per the
+   CSS overflow spec), which silently breaks position:sticky for everything
+   inside it — this bit us with the services sticky-stack cards. */
 html {
   scroll-behavior: auto;
+  overflow-x: hidden;
 }
 
 body {
@@ -49,7 +56,6 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
 }
 
 #root {

@@ -45,7 +45,7 @@ function ServiceStack() {
   return (
     <section className="mx-auto max-w-6xl px-6 pb-24 md:px-10 md:pb-32">
       {SERVICES.map((service, i) => (
-        <StickyStackItem key={service.slug} index={i} runway="22vh">
+        <StickyStackItem key={service.slug} index={i} runway="55vh">
           <TiltCard
             strength={4}
             className="overflow-hidden rounded-3xl border border-stone-dark/60 bg-cream shadow-[0_30px_60px_-30px_rgba(35,42,52,0.25)]"

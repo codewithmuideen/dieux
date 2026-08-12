@@ -2,11 +2,11 @@ import { useParams, Navigate, Link } from "react-router-dom";
 import { Check, ArrowRight, ArrowLeft } from "lucide-react";
 import Reveal from "../components/ui/Reveal";
 import StaggerGroup from "../components/ui/StaggerGroup";
-import RevealImage from "../components/ui/RevealImage";
 import NumberBadge from "../components/ui/NumberBadge";
 import Button from "../components/ui/Button";
 import TextReveal from "../components/ui/TextReveal";
-import { fadeUp, slideRight } from "../lib/motion";
+import FloatingRing from "../components/ui/FloatingRing";
+import { fadeUp, slideRight, scaleIn } from "../lib/motion";
 import { SERVICES, getServiceBySlug } from "../lib/services";
 
 export default function ServiceDetail() {
@@ -49,11 +49,14 @@ export default function ServiceDetail() {
       </section>
 
       <section className="mx-auto grid max-w-6xl grid-cols-1 gap-14 px-6 py-20 md:grid-cols-2 md:px-10 md:py-28">
-        <RevealImage
-          src={service.image}
-          alt={service.title}
-          wrapperClassName="h-[320px] rounded-2xl sm:h-[400px] md:h-full"
-        />
+        <Reveal
+          variants={scaleIn}
+          className="relative flex h-[320px] items-center justify-center overflow-hidden rounded-3xl bg-navy sm:h-[400px] md:h-full md:min-h-[420px]"
+        >
+          <span className="pointer-events-none absolute inset-0 [background-image:radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:26px_26px]" aria-hidden="true" />
+          <FloatingRing className="left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 opacity-40 md:h-72 md:w-72" />
+          <Icon className="relative h-24 w-24 text-cream/90 md:h-32 md:w-32" strokeWidth={1} />
+        </Reveal>
         <div className="flex flex-col justify-center gap-8">
           <Reveal variants={slideRight}>
             <p className="text-lg leading-relaxed text-navy/70">{service.description}</p>
@@ -64,9 +67,9 @@ export default function ServiceDetail() {
               <Reveal
                 key={f}
                 variants={fadeUp}
-                className="flex items-start gap-3 border-b border-stone-dark/60 pb-4"
+                className="group flex items-start gap-3 border-b border-stone-dark/60 pb-4 transition-transform duration-300 hover:translate-x-1.5"
               >
-                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-stone">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-stone transition-colors duration-300 group-hover:bg-gold group-hover:text-navy">
                   <Check className="h-3.5 w-3.5 text-navy" strokeWidth={2.5} />
                 </span>
                 <span className="text-base text-navy/80">{f}</span>
@@ -93,7 +96,7 @@ export default function ServiceDetail() {
             </span>
             <h3 className="mt-2 text-2xl font-bold text-navy md:text-3xl">{next.title}</h3>
           </div>
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-navy/20 text-navy transition-all duration-300 group-hover:bg-navy group-hover:text-cream">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-navy/20 text-navy transition-all duration-300 group-hover:-rotate-12 group-hover:scale-110 group-hover:bg-navy group-hover:text-cream">
             <ArrowRight className="h-4 w-4" />
           </span>
         </Link>

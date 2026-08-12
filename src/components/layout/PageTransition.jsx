@@ -4,18 +4,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import useReducedMotion from "../../hooks/useReducedMotion";
 import { EASE } from "../../lib/motion";
 
+// NOTE: deliberately opacity-only. Animating `scale`/`filter` here would apply
+// a transform/filter to this wrapper — which is an ancestor of every page's
+// content — and both properties create a new CSS containing block, which
+// silently breaks `position: sticky` for any nested sticky element (e.g. the
+// services sticky-stack cards). Keep this wrapper transform/filter-free.
 const pageVariants = {
-  initial: { opacity: 0, scale: 0.98, filter: "blur(6px)" },
+  initial: { opacity: 0 },
   animate: {
     opacity: 1,
-    scale: 1,
-    filter: "blur(0px)",
     transition: { duration: 0.5, ease: EASE, delay: 0.3 },
   },
   exit: {
     opacity: 0,
-    scale: 0.98,
-    filter: "blur(6px)",
     transition: { duration: 0.3, ease: EASE },
   },
 };
